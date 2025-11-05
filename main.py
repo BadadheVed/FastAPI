@@ -1,6 +1,7 @@
 
 from fastapi import FastAPI
 from models import Product
+from db import SessionLocal
 app = FastAPI()
 @app.get("/")
 def read_root():
@@ -12,7 +13,7 @@ products = [
     Product(id=2, name="Smartphone", description="A latest model smartphone", price=699.99, quantity=25),
     Product(id=3, name="Headphones", description="Noise-cancelling headphones", price=199.99, quantity=15)
 ]
-
+#. first connect the db connect 
 @app.get("/products")
 def listProducts():
     return {"products": products , "Status":"Success"}
