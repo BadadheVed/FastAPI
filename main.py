@@ -1,8 +1,8 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Body
 from sqlalchemy.orm import Session
 from models import Product, Base
 from db import SessionLocal, engine
-from fastapi import Body
+
 app = FastAPI()
 
 # Create all tables
@@ -37,11 +37,13 @@ def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/products")
-def add_product(name: str = Body(...),
+def add_product(
+    name: str = Body(...),
     description: str = Body(...),
     price: float = Body(...),
     quantity: int = Body(...),
-    db: Session = Depends(get_db)):
+    db: Session = Depends(get_db)
+):
     new_product = Product(
         name=name,
         description=description,
@@ -55,7 +57,14 @@ def add_product(name: str = Body(...),
 
 
 @app.put("/products/{product_id}")
-def update_product(product_id: int, name: str, description: str, price: float, quantity: int, db: Session = Depends(get_db)):
+def update_product(
+    product_id: int,
+    name: str = Body(...),
+    description: str = Body(...),
+    price: float = Body(...),
+    quantity: int = Body(...),
+    db: Session = Depends(get_db)
+):
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product Not Found")
